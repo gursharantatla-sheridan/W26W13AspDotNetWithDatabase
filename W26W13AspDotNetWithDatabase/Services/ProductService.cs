@@ -20,6 +20,11 @@ namespace W26W13AspDotNetWithDatabase.Services
                                  .ToListAsync();
         }
 
+        public async Task<List<Category>> GetCategoriesAsync()
+        {
+            return await _context.Categories.ToListAsync();
+        }
+
         public async Task<Product?> GetProductByIdAsync(int id)
         {
             return await _context.Products.FindAsync(id);
