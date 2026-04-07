@@ -1,0 +1,28 @@
+﻿@page "/products"
+@* @inject AppDbContext Db *@
+@inject ProductService ProductService
+
+<h3>Product List</h3>
+
+
+<ul>
+    @foreach (var p in products)
+    {
+        <li>@p.Name - @p.Price?.ToString("C")</li>
+    }
+</ul>
+
+
+@code {
+    private List<Product>? products = new();
+
+    // protected override void OnInitialized()
+    // {
+    //     products = Db.Products.ToList();
+    // }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetProductsAsync();
+    }
+}

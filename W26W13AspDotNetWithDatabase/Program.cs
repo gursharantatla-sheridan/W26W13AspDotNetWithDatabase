@@ -1,6 +1,7 @@
 using W26W13AspDotNetWithDatabase.Components;
 using Microsoft.EntityFrameworkCore;
 using W26W13AspDotNetWithDatabase.Data;
+using W26W13AspDotNetWithDatabase.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddRazorComponents()
 // register context class as a service
 string connStr = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connStr));
+
+// register ProductService as a service
+builder.Services.AddScoped<ProductService>();
 
 var app = builder.Build();
 
