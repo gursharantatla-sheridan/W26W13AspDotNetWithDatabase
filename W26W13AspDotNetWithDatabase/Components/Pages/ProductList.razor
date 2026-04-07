@@ -1,28 +1,55 @@
 ﻿@page "/products"
-@* @inject AppDbContext Db *@
+@rendermode InteractiveServer
+
 @inject ProductService ProductService
 
 <h3>Product List</h3>
 
+<a class="btn btn-primary mb-2" href="/products/add">Add Product</a>
 
-<ul>
-    @foreach (var p in products)
-    {
-        <li>@p.Name - @p.Price?.ToString("C")</li>
-    }
-</ul>
-
+@if (products == null || !products.Any())
+{
+    <p>No products found</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in products)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@(p.Price?.ToString("C") ?? "")</td>
+                    <td>@p.Category?.CategoryName</td>
+                    <td>
+                        <a href="/products/edit/@p.ProductId" class="btn btn-sm btn-warning">Edit</a>
+                        <button class="btn btn-sm btn-danger" @onclick="() => Delete(p.ProductId)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private List<Product>? products = new();
-
-    // protected override void OnInitialized()
-    // {
-    //     products = Db.Products.ToList();
-    // }
+    private List<Product>? products;
 
     protected override async Task OnInitializedAsync()
     {
         products = await ProductService.GetProductsAsync();
+    }
+
+    private async Task Delete(int id)
+    {
+        await ProductService.DeleteProductAsync(id);
+        products = await ProductService.GetProductsAsync(); // Refresh list
     }
 }
